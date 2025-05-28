@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Formulario Externo</title>
   <style>
+    /* Mantengo tu estilo original */
     * {
       box-sizing: border-box;
     }
@@ -12,22 +13,22 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #ffffff; /* blanco de fondo para mejor contraste */
+      background-color: #ffffff;
     }
 
     .container {
       max-width: 500px;
       margin: 50px auto;
-      background-color: #003134; /* color oscuro #003134 */
+      background-color: #003134;
       padding: 30px 20px;
       border-radius: 12px;
       box-shadow: 0 8px 16px rgba(0,49,52,0.3);
-      color: #00e28b; /* texto verde lima para contraste */
+      color: #00e28b;
     }
 
     h2 {
       text-align: center;
-      color: #00e28b; /* verde lima */
+      color: #00e28b;
       margin-bottom: 30px;
       font-weight: 700;
     }
@@ -36,43 +37,39 @@
       display: block;
       margin-bottom: 6px;
       font-weight: 600;
-      color: #00e28b; /* verde lima */
+      color: #00e28b;
     }
 
-    input, textarea, select {
+    input, select {
       width: 100%;
       padding: 12px;
       margin-bottom: 20px;
-      border: 2px solid #007173; /* borde azul oscuro */
+      border: 2px solid #007173;
       border-radius: 8px;
       font-size: 16px;
-      background-color: #ffffff; /* blanco fondo */
-      color: #003134; /* texto color oscuro para legibilidad */
+      background-color: #ffffff;
+      color: #003134;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
-      appearance: none; /* quitar flecha default en select para consistencia */
+      appearance: none;
     }
 
-    input:focus, textarea:focus, select:focus {
+    input:focus, select:focus {
       outline: none;
-      border-color: #00e28b; /* verde lima al enfocar */
+      border-color: #00e28b;
       box-shadow: 0 0 5px #00e28b;
       color: #003134;
       background-color: #ffffff;
     }
 
-    /* Color de item seleccionado en select (combo box) */
     select option:checked {
-      background-color: #00ffff; /* cyan */
-      color: #003134; /* texto oscuro */
-    }
-
-    /* Para algunos navegadores que no aplican :checked dentro de options, se puede aplicar en select */
-    select {
-      /* Para el texto seleccionado */
+      background-color: #00ffff;
       color: #003134;
     }
 
-    /* Al abrir el select, el item seleccionado se resalta en cian */
+    select {
+      color: #003134;
+    }
+
     select option:hover, select option:focus {
       background-color: #00e28b;
       color: #003134;
@@ -80,7 +77,7 @@
 
     button {
       width: 100%;
-      background-color: #007173; /* azul oscuro */
+      background-color: #007173;
       color: #ffffff;
       padding: 14px;
       font-size: 16px;
@@ -92,15 +89,15 @@
     }
 
     button:hover {
-      background-color: #00e28b; /* verde lima */
-      color: #003134; /* texto oscuro */
+      background-color: #00e28b;
+      color: #003134;
     }
 
     #resultado {
       text-align: center;
       margin-top: 15px;
       font-weight: bold;
-      color: #00e28b; /* verde lima */
+      color: #00e28b;
     }
 
     @media (max-width: 600px) {
@@ -118,7 +115,7 @@
     <form id="formulario">
 
       <label for="correo">Correo Electronico</label>
-      <input type="text" id="correo" name="correo" /> 
+      <input type="email" id="correo" name="correo" required placeholder="correo@ejemplo.com" /> 
       
       <label for="bodega">Bodega TI</label>
       <select id="bodega" name="bodega" required>
@@ -131,7 +128,7 @@
   </div>
 
   <script>
-    // Array con las bodegas
+    // Array con las bodegas (igual que antes)
     const bodegas = [
       "BODEGA DE TI ARMENIA BANCOLOMBIA",
       "BODEGA DE TI COB NIQUIA BANCOLOMBIA",
@@ -186,11 +183,32 @@
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
-      // Simulación de envío
-      resultado.textContent = '¡Formulario enviado correctamente! (Simulación)';
-      resultado.style.color = '#00e28b'; // verde lima
+      const data = {
+        correo: document.getElementById('correo').value,
+        bodega: document.getElementById('bodega').value
+      };
 
-      form.reset();
+      try {
+        const res = await fetch("https://prod-175.westus.logic.azure.com:443/workflows/34e39b236ae943d38bf7bf1e09f1ee2d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=EGyaxeO1NEBT-8h1kBmrPz50Rlxw63j8rIfz4BkPO7s", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+          resultado.innerText = "✅ Formulario enviado con éxito.";
+          resultado.style.color = "#007173";
+          form.reset();
+        } else {
+          resultado.innerText = "❌ Error al enviar: " + res.status;
+          resultado.style.color = "red";
+        }
+      } catch (error) {
+        resultado.innerText = "❌ Error de conexión: " + error;
+        resultado.style.color = "red";
+      }
     });
   </script>
 </body>
