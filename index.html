@@ -12,70 +12,95 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f4f4;
+      background-color: #ffffff; /* blanco de fondo para mejor contraste */
     }
 
     .container {
       max-width: 500px;
       margin: 50px auto;
-      background-color: white;
+      background-color: #003134; /* color oscuro #003134 */
       padding: 30px 20px;
       border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 16px rgba(0,49,52,0.3);
+      color: #00e28b; /* texto verde lima para contraste */
     }
 
     h2 {
       text-align: center;
-      color: #007173;
+      color: #00e28b; /* verde lima */
       margin-bottom: 30px;
+      font-weight: 700;
     }
 
     label {
       display: block;
       margin-bottom: 6px;
       font-weight: 600;
-      color: #007173;
+      color: #00e28b; /* verde lima */
     }
 
     input, textarea, select {
       width: 100%;
       padding: 12px;
       margin-bottom: 20px;
-      border: 2px solid #007173;
+      border: 2px solid #007173; /* borde azul oscuro */
       border-radius: 8px;
       font-size: 16px;
-      background-color: white;
-      color: #007173;
+      background-color: #ffffff; /* blanco fondo */
+      color: #003134; /* texto color oscuro para legibilidad */
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      appearance: none; /* quitar flecha default en select para consistencia */
     }
 
     input:focus, textarea:focus, select:focus {
       outline: none;
-      border-color: #00E58E;
-      box-shadow: 0 0 5px #00E58E;
+      border-color: #00e28b; /* verde lima al enfocar */
+      box-shadow: 0 0 5px #00e28b;
+      color: #003134;
+      background-color: #ffffff;
+    }
+
+    /* Color de item seleccionado en select (combo box) */
+    select option:checked {
+      background-color: #00ffff; /* cyan */
+      color: #003134; /* texto oscuro */
+    }
+
+    /* Para algunos navegadores que no aplican :checked dentro de options, se puede aplicar en select */
+    select {
+      /* Para el texto seleccionado */
+      color: #003134;
+    }
+
+    /* Al abrir el select, el item seleccionado se resalta en cian */
+    select option:hover, select option:focus {
+      background-color: #00e28b;
+      color: #003134;
     }
 
     button {
       width: 100%;
-      background-color: #007173;
-      color: white;
+      background-color: #007173; /* azul oscuro */
+      color: #ffffff;
       padding: 14px;
       font-size: 16px;
       font-weight: bold;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     button:hover {
-      background-color: #00E58E;
-      color: #007173;
+      background-color: #00e28b; /* verde lima */
+      color: #003134; /* texto oscuro */
     }
 
     #resultado {
       text-align: center;
       margin-top: 15px;
       font-weight: bold;
+      color: #00e28b; /* verde lima */
     }
 
     @media (max-width: 600px) {
@@ -161,32 +186,10 @@
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
-      const data = {
-        clase: document.getElementById('clase').value,
-        placa: document.getElementById('placa').value,
-        serial: document.getElementById('serial').value,
-        marca: document.getElementById('marca').value,
-        modelo: document.getElementById('modelo').value,
-        imagen: document.getElementById('imagen').value,
-        fechaimg: document.getElementById('fechaimg').value,
-        orden_in: document.getElementById('orden_in').value,
-        orden_out: document.getElementById('orden_out').value,
-        fecha: document.getElementById('fecha').value,
-        estado: document.getElementById('estado').value,
-        bodega: document.getElementById('bodega').value,
-        cantidad: document.getElementById('cantidad').value,
-        observaciones: document.getElementById('observaciones').value,
-        ingeniero: document.getElementById('ingeniero').value,
-        usuario_banco: document.getElementById('usuario_banco').value,
-      };
-
-      // Aquí deberías agregar la lógica para enviar estos datos a SharePoint o a tu backend
-      // Por ahora solo mostramos confirmación
-
+      // Simulación de envío
       resultado.textContent = '¡Formulario enviado correctamente! (Simulación)';
-      resultado.style.color = 'green';
+      resultado.style.color = '#00e28b'; // verde lima
 
-      // Opcional: limpiar el formulario
       form.reset();
     });
   </script>
