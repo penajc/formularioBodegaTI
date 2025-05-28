@@ -1,198 +1,150 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Formulario Externo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consulta Equipos por Bodega</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: Arial, sans-serif;
+      padding: 20px;
       background-color: #f4f4f4;
     }
-
-    .container {
-      max-width: 500px;
-      margin: 50px auto;
-      background-color: white;
-      padding: 30px 20px;
-      border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
-    h2 {
-      text-align: center;
-      color: #007173;
-      margin-bottom: 30px;
-    }
-
     label {
       display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: #007173;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      border: 2px solid #007173;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: #00E58E;
-      box-shadow: 0 0 5px #00E58E;
-    }
-
-    button {
-      width: 100%;
-      background-color: #007173;
-      color: white;
-      padding: 14px;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #00E58E;
-      color: #007173;
-    }
-
-    #resultado {
-      text-align: center;
       margin-top: 15px;
-      font-weight: bold;
     }
-
-    @media (max-width: 600px) {
-      .container {
-        margin: 20px;
-        padding: 20px 15px;
-      }
+    select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 16px;
+    }
+    #resultados-filtrados {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
     }
   </style>
 </head>
 <body>
+  <form id="miFormulario">
+    <h2>Consulta Equipos por Bodega</h2>
 
-  <div class="container">
-    <h2>Formulario de Registro de Equipos</h2>
-<form id="formulario">
-  <label for="clase">Clase</label>
-  <input type="text" id="clase" name="clase" required>
+    <label for="bodega">Bodega TI</label>
+    <select id="bodega" name="bodega" required></select>
 
-  <label for="placa">Placa</label>
-  <input type="text" id="placa" name="placa">
+    <button type="submit">Consultar</button>
+  </form>
 
-  <label for="serial">Serial</label>
-  <input type="text" id="serial" name="serial">
-
-  <label for="marca">Marca</label>
-  <input type="text" id="marca" name="marca">
-
-  <label for="modelo">Modelo</label>
-  <input type="text" id="modelo" name="modelo">
-
-  <label for="imagen">Imagen (URL)</label>
-  <input type="url" id="imagen" name="imagen">
-
-  <label for="fechaimg">Fecha Imagen</label>
-  <input type="date" id="fechaimg" name="fechaimg">
-
-  <label for="orden_in">Orden Ingreso</label>
-  <input type="text" id="orden_in" name="orden_in">
-
-  <label for="orden_out">Orden Salida</label>
-  <input type="text" id="orden_out" name="orden_out">
-
-  <label for="fecha">Fecha</label>
-  <input type="date" id="fecha" name="fecha">
-
-  <label for="estado">Estado</label>
-  <input type="text" id="estado" name="estado">
-
-  <label for="bodega">Bodega TI</label>
-  <input type="text" id="bodega" name="bodega">
-
-  <label for="cantidad">Cantidad</label>
-  <input type="number" id="cantidad" name="cantidad" min="1">
-
-  <label for="observaciones">Observaciones</label>
-  <textarea id="observaciones" name="observaciones" rows="3"></textarea>
-
-  <label for="ingeniero">Ingeniero Retira</label>
-  <input type="text" id="ingeniero" name="ingeniero">
-
-  <label for="usuario_banco">Usuario Banco</label>
-  <input type="text" id="usuario_banco" name="usuario_banco">
-
-  <button type="submit">Enviar</button>
-  <p id="resultado"></p>
-</form>
-
-  </div>
+  <div id="resultados-filtrados"></div>
 
   <script>
-  const form = document.getElementById('formulario');
-  const resultado = document.getElementById('resultado');
+    const bodegas = [
+      "BODEGA DE TI ARMENIA BANCOLOMBIA",
+      "BODEGA DE TI COB NIQUIA BANCOLOMBIA",
+      "BODEGA DE TI ED. CIUDAD DEL RIO MEDELLIN BANCOLOMBIA",
+      "BODEGA DE TI ED. TORRE ORIENTE MEDELLIN BANCOLOMBIA",
+      "BODEGA DE TI FLORENCIA BANCOLOMBIA",
+      "BODEGA DE TI GESTION CENTRO LOGISTICO CALI BANCOLOMBIA",
+      "BODEGA DE TI GESTION NIQUIA BANCOLOMBIA",
+      "BODEGA DE TI NUEVA SEDE MEDELLIN BANCOLOMBIA",
+      "BODEGA DE TI NUEVA SEDE MMC MEDELLIN BANCOLOMBIA",
+      "BODEGA DE TI POPAYAN BANCOLOMBIA",
+      "BODEGA DE TI RIONEGRO BANCOLOMBIA",
+      "BODEGA DE TI RYG LOGISTICA MEDELLIN BANCOLOMBIA",
+      "BODEGA DE TI SAN ANDRES ISLAS BANCOLOMBIA",
+      "BODEGA DE TI SEDE NORTE BOGOTA BANCOLOMBIA",
+      "BODEGA DE TI SEDE PRINCIPAL BOGOTA BANCOLOMBIA",
+      "BODEGA DE TI STC MEDELLIN LOGISTICA BANCOLOMBIA",
+      "BODEGA DE TI TULUA BANCOLOMBIA",
+      "BODEGA DE TI VILLAVICENCIO BANCOLOMBIA",
+      "BODEGA DE TI YOPAL BANCOLOMBIA",
+      "BODEGA DE TI APARTADO BANCOLOMBIA",
+      "BODEGA DE TI BARRANQUILLA BANCOLOMBIA",
+      "BODEGA DE TI BUCARAMANGA BANCOLOMBIA",
+      "BODEGA DE TI CALI BANCOLOMBIA",
+      "BODEGA DE TI CARTAGENA BANCOLOMBIA",
+      "BODEGA DE TI CUCUTA BANCOLOMBIA",
+      "BODEGA DE TI ED. GRANADA CALI BANCOLOMBIA",
+      "BODEGA DE TI GIRARDOT BANCOLOMBIA",
+      "BODEGA DE TI IBAGUE BANCOLOMBIA",
+      "BODEGA DE TI MANIZALES BANCOLOMBIA",
+      "BODEGA DE TI MONTERIA BANCOLOMBIA",
+      "BODEGA DE TI NEIVA BANCOLOMBIA",
+      "BODEGA DE TI PASTO BANCOLOMBIA",
+      "BODEGA DE TI PEREIRA BANCOLOMBIA",
+      "BODEGA DE TI SANTA MARTA BANCOLOMBIA",
+      "BODEGA DE TI SINCELEJO BANCOLOMBIA",
+      "BODEGA DE TI TUNJA BANCOLOMBIA",
+      "BODEGA DE TI VALLEDUPAR BANCOLOMBIA"
+    ];
 
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
+    const bodegaSelect = document.getElementById("bodega");
+    bodegas.forEach(nombre => {
+      const option = document.createElement("option");
+      option.value = nombre;
+      option.textContent = nombre;
+      bodegaSelect.appendChild(option);
+    });
 
-    const data = {
-  clase: document.getElementById('clase').value,
-  placa: document.getElementById('placa').value,
-  serial: document.getElementById('serial').value,
-  marca: document.getElementById('marca').value,
-  modelo: document.getElementById('modelo').value,
-  imagen: document.getElementById('imagen').value,
-  fechaimg: document.getElementById('fechaimg').value,
-  orden_in: document.getElementById('orden_in').value,
-  orden_out: document.getElementById('orden_out').value,
-  fecha: document.getElementById('fecha').value,
-  estado: document.getElementById('estado').value,
-  bodega: document.getElementById('bodega').value,
-  cantidad: document.getElementById('cantidad').value,
-  observaciones: document.getElementById('observaciones').value,
-  ingeniero: document.getElementById('ingeniero').value,
-  usuario_banco: document.getElementById('usuario_banco').value
-};
+    document.getElementById('miFormulario').addEventListener('submit', async function (e) {
+      e.preventDefault();
 
+      const data = {
+        bodega: document.getElementById('bodega').value
+      };
 
-    try {
-      const res = await fetch("https://prod-175.westus.logic.azure.com:443/workflows/34e39b236ae943d38bf7bf1e09f1ee2d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=EGyaxeO1NEBT-8h1kBmrPz50Rlxw63j8rIfz4BkPO7s", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
+      try {
+        const res = await fetch('https://prod-08.southamerica.logic.azure.com:443/...TU-FLUJO...', {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
 
-      if (res.ok) {
-        resultado.innerText = "✅ Formulario enviado con éxito.";
-        resultado.style.color = "#007173";
-        form.reset();
-      } else {
-        resultado.innerText = "❌ Error al enviar: " + res.status;
-        resultado.style.color = "red";
+        if (!res.ok) throw new Error('Error al enviar los datos.');
+
+        const resultadoFiltrado = await res.json();
+        const contenedor = document.getElementById("resultados-filtrados");
+        contenedor.innerHTML = "";
+
+        if (resultadoFiltrado.length === 0) {
+          contenedor.innerHTML = "<p>No se encontraron registros para esa bodega.</p>";
+        } else {
+          resultadoFiltrado.forEach(item => {
+            const div = document.createElement("div");
+            div.style.marginBottom = "10px";
+            div.style.padding = "10px";
+            div.style.border = "1px solid #ccc";
+            div.style.borderRadius = "8px";
+            div.innerHTML = `
+              <strong>Clase:</strong> ${item.clase}<br>
+              <strong>Placa:</strong> ${item.placa}<br>
+              <strong>Serial:</strong> ${item.serial}<br>
+              <strong>Marca:</strong> ${item.marca}<br>
+              <strong>Modelo:</strong> ${item.modelo}<br>
+              <hr>
+            `;
+            contenedor.appendChild(div);
+          });
+        }
+      } catch (err) {
+        alert("Hubo un error al consultar el flujo: " + err.message);
       }
-    } catch (error) {
-      resultado.innerText = "❌ Error de conexión: " + error;
-      resultado.style.color = "red";
-    }
-  });
-</script>
-
+    });
+  </script>
 </body>
 </html>
