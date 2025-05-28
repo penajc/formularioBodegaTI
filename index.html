@@ -117,12 +117,14 @@
       };
 
       try {
-        const res = await fetch("https://TU_URL_DEL_FLUJO", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
+        const res = await fetch("https://prod-175.westus.logic.azure.com:443/workflows/34e39b236ae943d38bf7bf1e09f1ee2d/triggers/manual/paths/invoke?api-version=2016-06-01", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(data)
+});
+
         });
 
         if (res.ok) {
