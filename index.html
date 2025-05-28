@@ -1,150 +1,183 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Consulta Equipos por Bodega</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Formulario Externo</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #f4f4f4;
     }
-    form {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 600px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background-color: white;
+      padding: 30px 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }
+
+    h2 {
+      text-align: center;
+      color: #007173;
+      margin-bottom: 30px;
+    }
+
     label {
       display: block;
-      margin-top: 15px;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #007173;
     }
-    select, button {
+
+    input, textarea, select {
       width: 100%;
-      padding: 10px;
-      margin-top: 5px;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 2px solid #007173;
+      border-radius: 8px;
       font-size: 16px;
     }
-    #resultados-filtrados {
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 20px;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #00E58E;
+      box-shadow: 0 0 5px #00E58E;
+    }
+
+    button {
+      width: 100%;
+      background-color: #007173;
+      color: white;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #00E58E;
+      color: #007173;
+    }
+
+    #resultado {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .resultados-container {
+      margin-top: 20px;
+      background-color: #e0f7f5;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #007173;
+      color: #004d4d;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 20px;
+        padding: 20px 15px;
+      }
     }
   </style>
 </head>
 <body>
-  <form id="miFormulario">
-    <h2>Consulta Equipos por Bodega</h2>
 
+<div class="container">
+  <h2>Formulario de Registro de Equipos</h2>
+  <form id="formulario">
     <label for="bodega">Bodega TI</label>
-    <select id="bodega" name="bodega" required></select>
+    <select id="bodega" name="bodega" required>
+      <option value="">Cargando bodegas...</option>
+    </select>
 
-    <button type="submit">Consultar</button>
+    <button type="submit">Buscar Equipos</button>
+    <p id="resultado"></p>
   </form>
 
-  <div id="resultados-filtrados"></div>
+  <div id="resultados" class="resultados-container" style="display: none;">
+    <h3>Datos Filtrados:</h3>
+    <div id="datosFiltrados"></div>
+  </div>
+</div>
 
-  <script>
-    const bodegas = [
-      "BODEGA DE TI ARMENIA BANCOLOMBIA",
-      "BODEGA DE TI COB NIQUIA BANCOLOMBIA",
-      "BODEGA DE TI ED. CIUDAD DEL RIO MEDELLIN BANCOLOMBIA",
-      "BODEGA DE TI ED. TORRE ORIENTE MEDELLIN BANCOLOMBIA",
-      "BODEGA DE TI FLORENCIA BANCOLOMBIA",
-      "BODEGA DE TI GESTION CENTRO LOGISTICO CALI BANCOLOMBIA",
-      "BODEGA DE TI GESTION NIQUIA BANCOLOMBIA",
-      "BODEGA DE TI NUEVA SEDE MEDELLIN BANCOLOMBIA",
-      "BODEGA DE TI NUEVA SEDE MMC MEDELLIN BANCOLOMBIA",
-      "BODEGA DE TI POPAYAN BANCOLOMBIA",
-      "BODEGA DE TI RIONEGRO BANCOLOMBIA",
-      "BODEGA DE TI RYG LOGISTICA MEDELLIN BANCOLOMBIA",
-      "BODEGA DE TI SAN ANDRES ISLAS BANCOLOMBIA",
-      "BODEGA DE TI SEDE NORTE BOGOTA BANCOLOMBIA",
-      "BODEGA DE TI SEDE PRINCIPAL BOGOTA BANCOLOMBIA",
-      "BODEGA DE TI STC MEDELLIN LOGISTICA BANCOLOMBIA",
-      "BODEGA DE TI TULUA BANCOLOMBIA",
-      "BODEGA DE TI VILLAVICENCIO BANCOLOMBIA",
-      "BODEGA DE TI YOPAL BANCOLOMBIA",
-      "BODEGA DE TI APARTADO BANCOLOMBIA",
-      "BODEGA DE TI BARRANQUILLA BANCOLOMBIA",
-      "BODEGA DE TI BUCARAMANGA BANCOLOMBIA",
-      "BODEGA DE TI CALI BANCOLOMBIA",
-      "BODEGA DE TI CARTAGENA BANCOLOMBIA",
-      "BODEGA DE TI CUCUTA BANCOLOMBIA",
-      "BODEGA DE TI ED. GRANADA CALI BANCOLOMBIA",
-      "BODEGA DE TI GIRARDOT BANCOLOMBIA",
-      "BODEGA DE TI IBAGUE BANCOLOMBIA",
-      "BODEGA DE TI MANIZALES BANCOLOMBIA",
-      "BODEGA DE TI MONTERIA BANCOLOMBIA",
-      "BODEGA DE TI NEIVA BANCOLOMBIA",
-      "BODEGA DE TI PASTO BANCOLOMBIA",
-      "BODEGA DE TI PEREIRA BANCOLOMBIA",
-      "BODEGA DE TI SANTA MARTA BANCOLOMBIA",
-      "BODEGA DE TI SINCELEJO BANCOLOMBIA",
-      "BODEGA DE TI TUNJA BANCOLOMBIA",
-      "BODEGA DE TI VALLEDUPAR BANCOLOMBIA"
-    ];
+<script>
+  // Cargar bodegas desde SharePoint vía Power Automate (simulado)
+  async function cargarBodegas() {
+    const select = document.getElementById("bodega");
+    try {
+      const response = await fetch("URL_FLUJO_LISTAR_BODEGAS"); // Cambia esta URL
+      const bodegas = await response.json(); // Debe devolver un array de strings
 
-    const bodegaSelect = document.getElementById("bodega");
-    bodegas.forEach(nombre => {
-      const option = document.createElement("option");
-      option.value = nombre;
-      option.textContent = nombre;
-      bodegaSelect.appendChild(option);
-    });
+      select.innerHTML = '<option value="">Seleccione una bodega</option>';
+      bodegas.forEach(bodega => {
+        const option = document.createElement("option");
+        option.value = bodega;
+        option.text = bodega;
+        select.appendChild(option);
+      });
+    } catch (error) {
+      select.innerHTML = '<option value="">Error al cargar</option>';
+      console.error("Error al cargar bodegas:", error);
+    }
+  }
 
-    document.getElementById('miFormulario').addEventListener('submit', async function (e) {
-      e.preventDefault();
+  document.addEventListener("DOMContentLoaded", cargarBodegas);
 
-      const data = {
-        bodega: document.getElementById('bodega').value
-      };
+  // Enviar formulario
+  document.getElementById("formulario").addEventListener("submit", async function (e) {
+    e.preventDefault();
 
-      try {
-        const res = await fetch('https://prod-08.southamerica.logic.azure.com:443/...TU-FLUJO...', {
-          method: 'POST',
-          body: JSON.stringify(data),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
+    const bodega = document.getElementById("bodega").value;
+    const resultado = document.getElementById("resultado");
+    const datosFiltrados = document.getElementById("datosFiltrados");
+    const resultadosContainer = document.getElementById("resultados");
 
-        if (!res.ok) throw new Error('Error al enviar los datos.');
+    resultado.innerText = "⌛ Enviando...";
+    resultado.style.color = "#007173";
+    resultadosContainer.style.display = "none";
 
-        const resultadoFiltrado = await res.json();
-        const contenedor = document.getElementById("resultados-filtrados");
-        contenedor.innerHTML = "";
+    try {
+      const res = await fetch("URL_FLUJO_FILTRAR_EQUIPOS", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bodega })
+      });
 
-        if (resultadoFiltrado.length === 0) {
-          contenedor.innerHTML = "<p>No se encontraron registros para esa bodega.</p>";
-        } else {
-          resultadoFiltrado.forEach(item => {
-            const div = document.createElement("div");
-            div.style.marginBottom = "10px";
-            div.style.padding = "10px";
-            div.style.border = "1px solid #ccc";
-            div.style.borderRadius = "8px";
-            div.innerHTML = `
-              <strong>Clase:</strong> ${item.clase}<br>
-              <strong>Placa:</strong> ${item.placa}<br>
-              <strong>Serial:</strong> ${item.serial}<br>
-              <strong>Marca:</strong> ${item.marca}<br>
-              <strong>Modelo:</strong> ${item.modelo}<br>
-              <hr>
-            `;
-            contenedor.appendChild(div);
-          });
-        }
-      } catch (err) {
-        alert("Hubo un error al consultar el flujo: " + err.message);
+      if (!res.ok) throw new Error("Error de servidor: " + res.status);
+      const data = await res.json();
+
+      resultado.innerText = "✅ Datos recibidos";
+      resultado.style.color = "#007173";
+
+      if (Array.isArray(data) && data.length > 0) {
+        datosFiltrados.innerHTML = data.map(item =>
+          `<p><strong>${item.clase}</strong> - ${item.serial} (${item.estado})</p>`
+        ).join("");
+        resultadosContainer.style.display = "block";
+      } else {
+        datosFiltrados.innerHTML = "<p>No se encontraron equipos.</p>";
+        resultadosContainer.style.display = "block";
       }
-    });
-  </script>
+
+    } catch (err) {
+      resultado.innerText = "❌ Error: " + err.message;
+      resultado.style.color = "red";
+    }
+  });
+</script>
+
 </body>
 </html>
