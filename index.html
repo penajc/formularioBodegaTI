@@ -87,20 +87,60 @@
 <body>
 
   <div class="container">
-    <h2>Formulario de Contacto</h2>
-    <form id="formulario">
-      <label for="nombre">Nombre</label>
-      <input type="text" id="nombre" name="nombre" required>
+    <h2>Formulario de Registro de Equipos</h2>
+<form id="formulario">
+  <label for="clase">Clase</label>
+  <input type="text" id="clase" name="clase" required>
 
-      <label for="correo">Correo electrónico</label>
-      <input type="email" id="correo" name="correo" required>
+  <label for="placa">Placa</label>
+  <input type="text" id="placa" name="placa">
 
-      <label for="mensaje">Mensaje</label>
-      <textarea id="mensaje" name="mensaje" rows="4" required></textarea>
+  <label for="serial">Serial</label>
+  <input type="text" id="serial" name="serial">
 
-      <button type="submit">Enviar</button>
-      <p id="resultado"></p>
-    </form>
+  <label for="marca">Marca</label>
+  <input type="text" id="marca" name="marca">
+
+  <label for="modelo">Modelo</label>
+  <input type="text" id="modelo" name="modelo">
+
+  <label for="imagen">Imagen (URL)</label>
+  <input type="url" id="imagen" name="imagen">
+
+  <label for="fechaimg">Fecha Imagen</label>
+  <input type="date" id="fechaimg" name="fechaimg">
+
+  <label for="orden_in">Orden Ingreso</label>
+  <input type="text" id="orden_in" name="orden_in">
+
+  <label for="orden_out">Orden Salida</label>
+  <input type="text" id="orden_out" name="orden_out">
+
+  <label for="fecha">Fecha</label>
+  <input type="date" id="fecha" name="fecha">
+
+  <label for="estado">Estado</label>
+  <input type="text" id="estado" name="estado">
+
+  <label for="bodega">Bodega TI</label>
+  <input type="text" id="bodega" name="bodega">
+
+  <label for="cantidad">Cantidad</label>
+  <input type="number" id="cantidad" name="cantidad" min="1">
+
+  <label for="observaciones">Observaciones</label>
+  <textarea id="observaciones" name="observaciones" rows="3"></textarea>
+
+  <label for="ingeniero">Ingeniero Retira</label>
+  <input type="text" id="ingeniero" name="ingeniero">
+
+  <label for="usuario_banco">Usuario Banco</label>
+  <input type="text" id="usuario_banco" name="usuario_banco">
+
+  <button type="submit">Enviar</button>
+  <p id="resultado"></p>
+</form>
+
   </div>
 
   <script>
@@ -111,10 +151,24 @@
     e.preventDefault();
 
     const data = {
-      nombre: document.getElementById('nombre').value,
-      correo: document.getElementById('correo').value,
-      mensaje: document.getElementById('mensaje').value
-    };
+  clase: document.getElementById('clase').value,
+  placa: document.getElementById('placa').value,
+  serial: document.getElementById('serial').value,
+  marca: document.getElementById('marca').value,
+  modelo: document.getElementById('modelo').value,
+  imagen: document.getElementById('imagen').value,
+  fechaimg: document.getElementById('fechaimg').value,
+  orden_in: document.getElementById('orden_in').value,
+  orden_out: document.getElementById('orden_out').value,
+  fecha: document.getElementById('fecha').value,
+  estado: document.getElementById('estado').value,
+  bodega: document.getElementById('bodega').value,
+  cantidad: document.getElementById('cantidad').value,
+  observaciones: document.getElementById('observaciones').value,
+  ingeniero: document.getElementById('ingeniero').value,
+  usuario_banco: document.getElementById('usuario_banco').value
+};
+
 
     try {
       const res = await fetch("https://prod-175.westus.logic.azure.com:443/workflows/34e39b236ae943d38bf7bf1e09f1ee2d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=EGyaxeO1NEBT-8h1kBmrPz50Rlxw63j8rIfz4BkPO7s", {
