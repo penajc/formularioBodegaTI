@@ -104,43 +104,41 @@
   </div>
 
   <script>
-    const form = document.getElementById('formulario');
-    const resultado = document.getElementById('resultado');
+  const form = document.getElementById('formulario');
+  const resultado = document.getElementById('resultado');
 
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-      const data = {
-        nombre: document.getElementById('nombre').value,
-        correo: document.getElementById('correo').value,
-        mensaje: document.getElementById('mensaje').value
-      };
+    const data = {
+      nombre: document.getElementById('nombre').value,
+      correo: document.getElementById('correo').value,
+      mensaje: document.getElementById('mensaje').value
+    };
 
-      try {
-        const res = await fetch("https://prod-175.westus.logic.azure.com:443/workflows/34e39b236ae943d38bf7bf1e09f1ee2d/triggers/manual/paths/invoke?api-version=2016-06-01", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(data)
-});
+    try {
+      const res = await fetch("https://prod-175.westus.logic.azure.com:443/workflows/34e39b236ae943d38bf7bf1e09f1ee2d/triggers/manual/paths/invoke?api-version=2016-06-01", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
 
-        });
-
-        if (res.ok) {
-          resultado.innerText = "✅ Formulario enviado con éxito.";
-          resultado.style.color = "#007173";
-          form.reset();
-        } else {
-          resultado.innerText = "❌ Error al enviar: " + res.status;
-          resultado.style.color = "red";
-        }
-      } catch (error) {
-        resultado.innerText = "❌ Error de conexión: " + error;
+      if (res.ok) {
+        resultado.innerText = "✅ Formulario enviado con éxito.";
+        resultado.style.color = "#007173";
+        form.reset();
+      } else {
+        resultado.innerText = "❌ Error al enviar: " + res.status;
         resultado.style.color = "red";
       }
-    });
-  </script>
+    } catch (error) {
+      resultado.innerText = "❌ Error de conexión: " + error;
+      resultado.style.color = "red";
+    }
+  });
+</script>
 
 </body>
 </html>
