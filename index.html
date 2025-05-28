@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario Externo</title>
+</head>
+<body>
+  <h2>Formulario de Contacto</h2>
+  <form id="formulario">
+    <label for="nombre">Nombre:</label><br>
+    <input type="text" id="nombre" name="nombre" required><br><br>
+
+    <label for="correo">Correo:</label><br>
+    <input type="email" id="correo" name="correo" required><br><br>
+
+    <label for="mensaje">Mensaje:</label><br>
+    <textarea id="mensaje" name="mensaje" rows="4" required></textarea><br><br>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <p id="resultado"></p>
+
+  <script>
+    const form = document.getElementById('formulario');
+    const resultado = document.getElementById('resultado');
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const data = {
+        nombre: document.getElementById('nombre').value,
+        correo: document.getElementById('correo').value,
+        mensaje: document.getElementById('mensaje').value
+      };
+
+      try {
+        const res = await fetch("https://TU_URL_DEL_FLUJO", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+          resultado.innerText = "¡Formulario enviado con éxito!";
+          form.reset();
+        } else {
+          resultado.innerText = "Error al enviar: " + res.status;
+        }
+      } catch (error) {
+        resultado.innerText = "Error en la conexión: " + error;
+      }
+    });
+  </script>
+</body>
+</html>
