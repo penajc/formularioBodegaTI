@@ -28,7 +28,7 @@
 <div id="contenedor">Cargando información...</div>
 
 <script>
-  const url = "https://[URL_DEL_FLUJO_AQUI]"; // <-- reemplaza aquí
+  const url = "https://prod-175.westus.logic.azure.com:443/workflows/34e39b236ae943d38bf7bf1e09f1ee2d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=EGyaxeO1NEBT-8h1kBmrPz50Rlxw63j8rIfz4BkPO7s"; // <-- reemplaza aquí
 
   fetch(url)
     .then(response => response.json())
