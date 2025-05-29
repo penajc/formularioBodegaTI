@@ -1,61 +1,128 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Detalles de la Bodega</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #ffffff;
-      color: #003134;
-      padding: 20px;
-    }
-    h2 {
-      color: #007173;
-    }
-    .item {
-      background: #f0f0f0;
-      margin-bottom: 10px;
-      padding: 10px;
-      border-radius: 8px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Detalles de la Bodega</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #e6f2f2;
+    color: #004d4d;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+  }
+  th, td {
+    border: 1px solid #004d4d;
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background-color: #007a7a;
+    color: white;
+  }
+  tr:nth-child(even) {
+    background-color: #d9f2f2;
+  }
+  img {
+    max-width: 80px;
+    max-height: 50px;
+  }
+</style>
 </head>
 <body>
 
-<h2>Detalles de la Bodega</h2>
-<div id="contenedor">Cargando información...</div>
+<h1>Detalles de la Bodega</h1>
+
+<table id="tabla-bodega">
+  <thead>
+    <tr>
+      <th>Clase</th>
+      <th>Placa</th>
+      <th>Serial</th>
+      <th>Marca</th>
+      <th>Modelo</th>
+      <th>Imagen</th>
+      <th>Fecha Imagen</th>
+      <th>Orden In</th>
+      <th>Orden Out</th>
+      <th>Estado</th>
+      <th>Cantidad</th>
+      <th>Observaciones</th>
+      <th>Ingeniero</th>
+      <th>Usuario Banco</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Aquí se insertan los datos -->
+  </tbody>
+</table>
 
 <script>
-  const url = "https://prod-175.westus.logic.azure.com:443/workflows/34e39b236ae943d38bf7bf1e09f1ee2d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=EGyaxeO1NEBT-8h1kBmrPz50Rlxw63j8rIfz4BkPO7s"; // <-- reemplaza aquí
+  // Cambia esta URL por la de tu API real
+  const apiUrl = "https://prod-175.westus.logic.azure.com:443/workflows/34e39b236ae943d38bf7bf1e09f1ee2d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=EGyaxeO1NEBT-8h1kBmrPz50Rlxw63j8rIfz4BkPO7s"; // <-- reemplaza aquí
 
-  fetch(url)
+  fetch(apiURL)
     .then(response => response.json())
     .then(data => {
-      const contenedor = document.getElementById('contenedor');
-      contenedor.innerHTML = ''; // Limpia el texto "Cargando información..."
+      const lista = data.body;
+      const tbody = document.querySelector('#tabla-bodega tbody');
+      if (!Array.isArray(lista)) {
+        tbody.innerHTML = '<tr><td colspan="14">No se encontraron datos válidos.</td></tr>';
+        return;
+      }
 
-      data.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.innerHTML = `
-          <strong>CLASE:</strong> ${item.CLASE || ''}<br>
-          <strong>PLACA:</strong> ${item.PLACA || ''}<br>
-          <strong>SERIAL:</strong> ${item.SERIAL || ''}<br>
-          <strong>MARCA:</strong> ${item.MARCA || ''}<br>
-          <strong>MODELO:</strong> ${item.MODELO || ''}<br>
-          <strong>IMAGEN:</strong> <img src="${item.IMAGEN || ''}" width="100"><br>
-          <strong>ESTADO:</strong> ${item.ESTADO || ''}<br>
-          <strong>BODEGA_TI:</strong> ${item.BODEGA_TI || ''}<br>
+      lista.forEach(item => {
+        // Crea una fila
+        const tr = document.createElement('tr');
+
+        // Usa propiedades accediendo por nombre (ojo con espacios)
+        // Si la imagen es una URL válida, la mostramos en un <img>, si no, "N/A"
+        const imgHTML = (item.Imagen && item.Imagen !== 'N/A') 
+          ? `<img src="${item.Imagen}" alt="Imagen">` 
+          : 'N/A';
+
+        // Para propiedades con espacios o espacios extras, usa corchetes y .trim()
+        tr.innerHTML = `
+          <td>${item.Clase || ''}</td>
+          <td>${item.Placa || ''}</td>
+          <td>${item.Serial || ''}</td>
+          <td>${item.Marca || ''}</td>
+          <td>${item.Modelo || ''}</td>
+          <td>${imgHTML}</td>
+          <td>${item["Fecha Imagen"] || ''}</td>
+          <td>${item["Orden In"] || ''}</td>
+          <td>${item["Orden Out"] || ''}</td>
+          <td>${item.Estado || ''}</td>
+          <td>${item.Cantidad || ''}</td>
+          <td>${item.Observaciones || ''}</td>
+          <td>${item["Ingeniero "] ? item["Ingeniero "].trim() : ''}</td>
+          <td>${item["Usuario Banco"] || ''}</td>
         `;
-        contenedor.appendChild(div);
+        tbody.appendChild(tr);
       });
     })
-    .catch(error => {
-      document.getElementById('contenedor').innerText = 'Error al obtener datos: ' + error;
+    .catch(err => {
+      console.error('Error al obtener datos:', err);
+      const tbody = document.querySelector('#tabla-bodega tbody');
+      tbody.innerHTML = `<tr><td colspan="14">Error al cargar datos</td></tr>`;
     });
 </script>
 
 </body>
 </html>
+
+
+ 
+
+  
