@@ -1,55 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Detalle de Bodega</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detalles de la Bodega</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #ffffff;
       color: #003134;
-      margin: 0;
       padding: 20px;
     }
-
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      background-color: #003134;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0,49,52,0.3);
-      color: #00e28b;
-    }
-
     h2 {
-      text-align: center;
-      color: #00e28b;
+      color: #007173;
     }
-
-    p {
-      font-size: 18px;
-      margin: 10px 0;
-    }
-
-    .label {
-      font-weight: bold;
+    .item {
+      background: #f0f0f0;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Información de la Bodega</h2>
-    <p><span class="label">Correo:</span> <span id="correo"></span></p>
-    <p><span class="label">Bodega Seleccionada:</span> <span id="bodega"></span></p>
-  </div>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    document.getElementById("correo").textContent = params.get("correo") || "No especificado";
-    document.getElementById("bodega").textContent = params.get("bodega") || "No especificado";
-  </script>
+<h2>Detalles de la Bodega</h2>
+<div id="contenedor">Cargando información...</div>
+
+<script>
+  const url = "https://[URL_DEL_FLUJO_AQUI]"; // <-- reemplaza aquí
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      const contenedor = document.getElementById('contenedor');
+      contenedor.innerHTML = ''; // Limpia el texto "Cargando información..."
+
+      data.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <strong>CLASE:</strong> ${item.CLASE || ''}<br>
+          <strong>PLACA:</strong> ${item.PLACA || ''}<br>
+          <strong>SERIAL:</strong> ${item.SERIAL || ''}<br>
+          <strong>MARCA:</strong> ${item.MARCA || ''}<br>
+          <strong>MODELO:</strong> ${item.MODELO || ''}<br>
+          <strong>IMAGEN:</strong> <img src="${item.IMAGEN || ''}" width="100"><br>
+          <strong>ESTADO:</strong> ${item.ESTADO || ''}<br>
+          <strong>BODEGA_TI:</strong> ${item.BODEGA_TI || ''}<br>
+        `;
+        contenedor.appendChild(div);
+      });
+    })
+    .catch(error => {
+      document.getElementById('contenedor').innerText = 'Error al obtener datos: ' + error;
+    });
+</script>
+
 </body>
 </html>
-
