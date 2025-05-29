@@ -1,1 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Detalle de Bodega</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #ffffff;
+      color: #003134;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #003134;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,49,52,0.3);
+      color: #00e28b;
+    }
+
+    h2 {
+      text-align: center;
+      color: #00e28b;
+    }
+
+    p {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Información de la Bodega</h2>
+    <p><span class="label">Correo:</span> <span id="correo"></span></p>
+    <p><span class="label">Bodega Seleccionada:</span> <span id="bodega"></span></p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById("correo").textContent = params.get("correo") || "No especificado";
+    document.getElementById("bodega").textContent = params.get("bodega") || "No especificado";
+  </script>
+</body>
+</html>
 
