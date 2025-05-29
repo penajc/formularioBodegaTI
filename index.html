@@ -169,47 +169,63 @@
       "BODEGA DE TI VALLEDUPAR BANCOLOMBIA"
     ];
 
-    const selectBodega = document.getElementById("bodega");
-    bodegas.forEach(bodega => {
-      const option = document.createElement("option");
-      option.value = bodega;
-      option.textContent = bodega;
-      selectBodega.appendChild(option);
-    });
+    // Llenar el select
+  const selectBodega = document.getElementById("bodega");
+  bodegas.forEach(bodega => {
+    const option = document.createElement("option");
+    option.value = bodega;
+    option.textContent = bodega;
+    selectBodega.appendChild(option);
+  });
 
-    const form = document.getElementById('formulario');
-    const resultado = document.getElementById('resultado');
+  const form = document.getElementById('formulario');
+  const resultado = document.getElementById('resultado');
+  const boton = form.querySelector("button");
 
-    form.addEventListener('submit', async function (e) {
-      e.preventDefault();
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-      const data = {
-        correo: document.getElementById('correo').value,
-        bodega: document.getElementById('bodega').value
-      };
+    const correo = document.getElementById('correo').value.trim();
+    const bodega = document.getElementById('bodega').value;
 
-      try {
-        const res = await fetch("https://prod-175.westus.logic.azure.com:443/workflows/34e39b236ae943d38bf7bf1e09f1ee2d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=EGyaxeO1NEBT-8h1kBmrPz50Rlxw63j8rIfz4BkPO7s", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
-        });
+    // Validar dominio del correo
+    if (!correo.endsWith("@bancolombia.com.co")) {
+      resultado.innerText = "❌ Solo se permiten correos @bancolombia.com.co";
+      resultado.style.color = "red";
+      return;
+    }
 
-        if (res.ok) {
-          resultado.innerText = "✅ Formulario enviado con éxito.";
-          resultado.style.color = "#007173";
-          form.reset();
-        } else {
-          resultado.innerText = "❌ Error al enviar: " + res.status;
-          resultado.style.color = "red";
-        }
-      } catch (error) {
-        resultado.innerText = "❌ Error de conexión: " + error;
+    // Desactivar botón mientras se envía
+    boton.disabled = true;
+    boton.textContent = "Enviando...";
+
+    const data = { correo, bodega };
+
+    try {
+      const res = await fetch("https://prod-175.westus.logic.azure.com:443/workflows/34e39b236ae943d38bf7bf1e09f1ee2d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=EGyaxeO1NEBT-8h1kBmrPz50Rlxw63j8rIfz4BkPO7s", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        resultado.innerText = "✅ Formulario enviado con éxito.";
+        resultado.style.color = "#007173";
+        form.reset();
+      } else {
+        resultado.innerText = "❌ Error al enviar: " + res.status;
         resultado.style.color = "red";
       }
-    });
-  </script>
+    } catch (error) {
+      resultado.innerText = "❌ Error de conexión: " + error;
+      resultado.style.color = "red";
+    } finally {
+      boton.disabled = false;
+      boton.textContent = "Enviar";
+    }
+  });
+</script>
 </body>
 </html>
